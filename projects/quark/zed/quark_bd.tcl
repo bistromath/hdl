@@ -4,6 +4,7 @@ set_property -dict [list CONFIG.c_include_s2mm {1}] $axi_hdmi_dma
 #video capture
 #set_property -dict [list CONFIG.PCW_USE_S_AXI_HP1 {1}] $sys_ps7
 
+#TODO get rid of video timing block, reencapsulate your vsync as IP
 create_bd_port -dir I -from 7 -to 0 video_data
 create_bd_port -dir I video_clk
 create_bd_port -dir I video_frame_valid

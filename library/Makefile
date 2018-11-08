@@ -83,7 +83,7 @@ clean:
 	make -C xilinx/axi_dacfifo clean
 	make -C xilinx/axi_xcvrlb clean
 	make -C xilinx/util_adxcvr clean
-
+	make -C quark/vsync clean
 	make -C interfaces clean
 
 
@@ -164,6 +164,7 @@ lib:
 	-make -C xilinx/axi_dacfifo
 	-make -C xilinx/axi_xcvrlb
 	-make -C xilinx/util_adxcvr
+	-make -C quark/vsync
 
 	-make -C interfaces
 
