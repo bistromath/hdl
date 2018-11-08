@@ -118,14 +118,14 @@ set_property -dict [list CONFIG.C_OPERATION {not}] $sys_logic_inv
 set axi_hdmi_clkgen [create_bd_cell -type ip -vlnv analog.com:user:axi_clkgen:1.0 axi_hdmi_clkgen]
 set axi_hdmi_core [create_bd_cell -type ip -vlnv analog.com:user:axi_hdmi_tx:1.0 axi_hdmi_core]
 
-set axi_hdmi_dma [create_bd_cell -type ip -vlnv xilinx.com:ip:axi_vdma:6.2 axi_hdmi_dma]
+set axi_hdmi_dma [create_bd_cell -type ip -vlnv xilinx.com:ip:axi_vdma:6.3 axi_hdmi_dma]
 set_property -dict [list CONFIG.C_M_AXIS_MM2S_TDATA_WIDTH {64}] $axi_hdmi_dma
 set_property -dict [list CONFIG.C_USE_MM2S_FSYNC {1}] $axi_hdmi_dma
 set_property -dict [list CONFIG.C_INCLUDE_S2MM {0}] $axi_hdmi_dma
 
 # audio peripherals
 
-set sys_audio_clkgen [create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:5.3 sys_audio_clkgen]
+set sys_audio_clkgen [create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:5.4 sys_audio_clkgen]
 set_property -dict [list CONFIG.PRIM_IN_FREQ {200.000}] $sys_audio_clkgen
 set_property -dict [list CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {12.288}] $sys_audio_clkgen
 set_property -dict [list CONFIG.USE_LOCKED {false}] $sys_audio_clkgen
