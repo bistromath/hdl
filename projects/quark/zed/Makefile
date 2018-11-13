@@ -19,6 +19,7 @@ M_DEPS += ../../../library/axi_hdmi_tx/axi_hdmi_tx.xpr
 M_DEPS += ../../../library/axi_i2s_adi/axi_i2s_adi.xpr
 M_DEPS += ../../../library/axi_spdif_tx/axi_spdif_tx.xpr
 M_DEPS += ../../../library/util_i2c_mixer/util_i2c_mixer.xpr
+M_DEPS += ../../../library/quark/vsync/vsync.xpr
 
 M_VIVADO := vivado -mode batch -source
 
@@ -52,6 +53,7 @@ clean-all:clean
 	make -C ../../../library/axi_i2s_adi clean
 	make -C ../../../library/axi_spdif_tx clean
 	make -C ../../../library/util_i2c_mixer clean
+	make -C ../../../library/quark/vsync clean
 
 
 quark_zed.sdk/system_top.hdf: $(M_DEPS)
@@ -65,6 +67,7 @@ lib:
 	make -C ../../../library/axi_i2s_adi
 	make -C ../../../library/axi_spdif_tx
 	make -C ../../../library/util_i2c_mixer
+	make -C ../../../library/quark/vsync
 
 ####################################################################################
 ####################################################################################

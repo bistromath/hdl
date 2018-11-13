@@ -18,21 +18,30 @@
 //vsync module takes video from a monochrome camera
 //with frame/line valid signals (like, say, a Quark)
 //and outputs an AXI4 Stream Video compliant stream.
-
+//this is synchronous to vclk so a downstream 2-clk
+//FIFO handles that.
+//
+//ok let me think about this... the data is clocked in
+//on the positive edge, which means we want to sample it
+//on the negative edge. BUT we'd like all the subsequent
+//blocks to use posedge, because AXI4-Stream is always
+//sampled on the rising edge. we could just invert video_clk
+//in the input buffer, before it gets wired anywhere.
+//
+//how do axi devices clock data out on the falling edge?
+//i've never seen that. do we just depend on clock delay?
 module vsync #(parameter WIDTH=8)
             (input vclk, //video clock
              input framevalid,
              input linevalid,
              input [WIDTH-1:0] data, //pixel data
-             input clk, //AXI clock
              input reset, //AXI reset
              output [WIDTH-1:0] m_axis_data_tdata, //data output
              output m_axis_data_tlast,       //end of line
              input m_axis_data_tready,      //tready
              output m_axis_data_tvalid,      //tvalid
              output m_axis_data_tuser,       //start of frame
-             output error, //shit
-             output overflow); //other shit
+             output error);
 
    reg [WIDTH-1:0] data_flop;
    reg linevalid_flop, framevalid_flop, framevalid_flop_flop, sof_flop;
@@ -67,27 +76,12 @@ module vsync #(parameter WIDTH=8)
 
    assign eol = (~linevalid) & linevalid_flop;
    assign sof = linevalid & (~framevalid_flop_flop);
-   
-   assign error = 0; //TODO: should do something with this.
-   
-   //1024-line 2-clock BRAM FIFO
-   //input is non-flow-controlled,
-   //so we just ignore the s_axis_tdata
-   //and look for overflows.
-   fifo_2clk_video inst_fifo_2clk_video(
-      .s_aclk(vclk),
-      .s_axis_tdata(data_flop),
-      .s_axis_tlast(eol),
-      .s_axis_tuser(sof_flop),
-      .s_axis_tvalid(linevalid_flop & framevalid_flop),
-      .s_axis_tready(), //we're always ready betch
-      .m_aclk(clk),
-      .s_aresetn(~reset),
-      .m_axis_tdata(m_axis_data_tdata),
-      .m_axis_tlast(m_axis_data_tlast),
-      .m_axis_tuser(m_axis_data_tuser),
-      .m_axis_tvalid(m_axis_data_tvalid),
-      .m_axis_tready(m_axis_data_tready),
-      .axis_overflow(overflow));
+
+   assign m_axis_data_tdata = data_flop;
+   assign m_axis_data_tlast = eol;
+   assign m_axis_data_tvalid = (linevalid_flop & framevalid_flop);
+   assign m_axis_data_tuser = sof_flop;
+   assign error = 1'b0;
+
 endmodule
 
